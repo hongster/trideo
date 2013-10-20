@@ -1,0 +1,7 @@
+.htaccess
+application/cache
+application/config/*.php
+application/logs
+composer.lock
+phpunit.xml
+vendor
