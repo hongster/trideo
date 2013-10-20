@@ -10,17 +10,17 @@ class Auth_SimpleAuth extends Auth {
 	 * Logs a user in.
 	 *
 	 * @override
-	 * @param string $username (Email address)
+	 * @param string $email
 	 * @param string $password
 	 * @param bool $remember This is not supported.
 	 * @return bool
 	 */
-	protected function _login($username, $password, $remember)
+	protected function _login($email, $password, $remember)
 	{
-		$user = ORM::factory('User')
-			->where('username', '=', $username)
-			->where('password', '=', $this->hash($password))
-			->find();
+		$user = ORM::factory('User', array(
+				'email' => strtolower($email),
+				'password' => $this->hash($password),
+			));
 
 		if ($user->loaded())
 		{
