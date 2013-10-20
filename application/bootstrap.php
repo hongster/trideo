@@ -121,10 +121,11 @@ Kohana::$config->attach(new Config_File);
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
+	'simpleauth' => MODPATH.'simpleauth',
+	'auth' => MODPATH.'auth',
 	'orm' => MODPATH.'orm', // Object Relationship Mapping
 	'mysqli' => MODPATH.'mysqli',
 	'database' => MODPATH.'database', // Database access
-	// 'auth'       => MODPATH.'auth',       // Basic authentication
 	// 'cache'      => MODPATH.'cache',      // Caching with multiple backends
 	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
 	// 'image'      => MODPATH.'image',      // Image manipulation

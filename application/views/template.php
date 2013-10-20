@@ -37,7 +37,7 @@
 	<footer>
 		<div class="container">
 			<p class="text-muted">
-				<a href="http://hackerspacejb.org">HackerSpaceJB</a>
+				A community project by <a href="http://hackerspacejb.org">HackerSpaceJB</a>.
 			</p>
 		</div>
 	</footer>
