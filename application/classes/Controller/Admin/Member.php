@@ -20,13 +20,9 @@ class Controller_Admin_Member extends Trideo_Controller_Admin {
 
 		if ($this->request->method() == Request::POST)
 		{
-			$user = ORM::factory('User')->values($data);
-			
 			try
 			{
-				$user->check();
-				$user->password = Auth::instance()->hash_password($user->password);
-				$user->create();
+				$user = Membership::create_member($data);
 				return $this->redirect('admin/member/info/'.$user->id);
 			}
 			catch (ORM_Validation_Exception $e)
@@ -66,26 +62,10 @@ class Controller_Admin_Member extends Trideo_Controller_Admin {
 		if ($this->request->method() == Request::POST)
 		{
 			$data = $this->request->post();
-			$change_password = ($data['password'] != '');
-
-			if ( ! $change_password)
-			{
-				unset($data['password']);
-			}
-
-			$user->values($data);
 			
 			try
 			{
-				$user->check();
-				
-				if ($change_password)
-				{
-					$user->password = Auth::instance()->hash_password($user->password);
-				}
-				
-				$user->update();
-
+				Membership::update_member($user, $data);
 				return $this->redirect('admin/member/info/'.$user->id);
 			}
 			catch (ORM_Validation_Exception $e)
