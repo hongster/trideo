@@ -107,4 +107,42 @@ class Controller_Admin_Member extends Trideo_Controller_Admin {
 		));
 	}
 
+	/**
+	 * Promote user to admin status.
+	 * Params:
+	 *	- id User ID
+	 */
+	public function action_promote_admin()
+	{
+		$user = ORM::factory('User', $this->request->param('id'));
+
+		if ( ! $user->is_admin())
+		{
+			$user->add('roles', ORM::factory('Role', array('name' => 'admin')));
+		}
+
+		return $this->_flash_success('Member promoted to admin.', 'admin/member/info/'.$user->id);
+	}
+
+	/**
+	 * Params:
+	 *	- id User ID
+	 */
+	public function action_demote_admin()
+	{
+		$user = ORM::factory('User', $this->request->param('id'));
+
+		if ($user->id == 1)
+		{
+			$this->_flash_error('Cannot demote superadmin.', 'admin/member/info/'.$user->id);
+		}
+
+		if ($user->is_admin())
+		{
+			$user->remove('roles', ORM::factory('Role', array('name' => 'admin')));
+		}
+
+		return $this->_flash_success('Member demoted.', 'admin/member/info/'.$user->id);
+	}
+
 } // Controller_Admin_Member
