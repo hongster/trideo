@@ -13,4 +13,12 @@ class Model_ACL_User extends Model_SimpleAuth_User {
 		),
 	);
 	
+	/**
+	 * @return bool
+	 */
+	public function is_admin()
+	{
+		return $this->has('roles', ORM::factory('Role', array('name' => 'admin')));
+	}
+
 } // Model_User

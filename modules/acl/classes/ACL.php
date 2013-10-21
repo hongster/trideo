@@ -12,9 +12,7 @@ class ACL {
 		if ( ! ($user = Auth::instance()->get_user()))
 			return FALSE;
 
-		$user = ORM::factory('User', $user['id']);
-
-		return $user->has('roles', ORM::factory('Role', array('name' => 'admin')));
+		return ORM::factory('User', $user['id'])->is_admin();
 	}
 
 } // ACL
