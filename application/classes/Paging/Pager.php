@@ -20,27 +20,6 @@ class Paging_Pager {
 	/** @var array Result from query. */
 	protected $result = array();
 
-	/** Singletons */
-	protected static $instances = array();
-
-	protected function __construct() {}
-
-	/**
-	 * Multiple pager support. Each pager instance is identified by a name.
-	 *
-	 * @param string $name Instance identifier
-	 * @return Pager
-	 */
-	public static function instance($name)
-	{
-		if ( ! isset(static::$instances[$name]))
-		{
-			static::$instances[$name] = new static;	
-		}
-
-		return static::$instances[$name];
-	}
-
 	/**
 	 * @return int Number of pages of result.
 	 */

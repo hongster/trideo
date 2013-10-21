@@ -12,7 +12,7 @@ class Model_User extends Model_ACL_User implements Paging_Pagable {
 	 */
 	public function query_result(array $query, $limit, $offset)
 	{
-		$customer = ORM::factory('Customer');
+		$customer = ORM::factory('User');
 		foreach ($query as $field => $value)
 		{
 			$customer->or_where($field, 'like', "%{$value}%");
