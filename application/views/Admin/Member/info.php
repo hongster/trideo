@@ -30,6 +30,8 @@
 			<?php else: ?>
 				<li><?php echo HTML::anchor('admin/member/promote_admin/'.$user->id, 'Promote Admin'); ?></li>
 			<?php endif; ?>
+
+			<li><?php echo HTML::anchor('admin/credit/purchase/'.$user->id, 'Purchase Credits'); ?></li>
 		</ul>
 	</div><!-- Action menu -->
 </div>
