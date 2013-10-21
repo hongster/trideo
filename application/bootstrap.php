@@ -121,6 +121,7 @@ Kohana::$config->attach(new Config_File);
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
+	'acl' => MODPATH.'acl',
 	'simpleauth' => MODPATH.'simpleauth',
 	'auth' => MODPATH.'auth',
 	'orm' => MODPATH.'orm', // Object Relationship Mapping
@@ -152,6 +153,16 @@ Route::set('logout', 'logout')
 	->defaults(array(
 		'controller' => 'Session',
 		'action' => 'logout',
+	));
+
+/**
+ * Adminstration pages
+ */
+Route::set('admin', 'admin(/<controller>(/<action>(/<id>)))')
+	->defaults(array(
+		'directory' => 'Admin',
+		'controller' => 'Member',
+		'action' => 'index',
 	));
 
 /**

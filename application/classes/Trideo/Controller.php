@@ -28,15 +28,20 @@ class Trideo_Controller extends Controller_Template {
 			return;
 		}
 
-		$file = $this->request->controller()
-			.DIRECTORY_SEPARATOR.$this->request->action();
+		$file = '';
+		if ($directory = $this->request->directory())
+		{
+			$file = $directory;
+		}
+		$file .= DIRECTORY_SEPARATOR.$this->request->controller();
+		$file .= DIRECTORY_SEPARATOR.$this->request->action();
 		
 		try
 		{
 			$this->view = View::factory($file);
 			$this->template->content = $this->view;
 		}
-		catch (View_Exception $ex)
+		catch (View_Exception $e)
 		{
 			// View file not available
 		}
@@ -72,33 +77,53 @@ class Trideo_Controller extends Controller_Template {
 	}
 
 	/**
+	 * Flash message, redirect if URL is specified.
+	 *
+	 * @param string $type
+	 * @param string $message
+	 * @param string $url Optional redirection URL.
+	 */
+	protected function _flash_message($type, $message, $url = NULL)
+	{
+		Session::instance()->set($type, $message);
+
+		if ($url !== NULL)
+		{
+			return $this->redirect($url);
+		}
+	}
+
+	/**
 	 * Flash informational message.
 	 *
 	 * @param string $message
+	 * @param string $url Optional redirection URL.
 	 */
-	protected function _flash_info($message)
+	protected function _flash_info($message, $url = NULL)
 	{
-		Session::instance()->set(static::MESSAGE_INFO, $message);
+		$this->_flash_message(static::MESSAGE_INFO, $message, $url);
 	}
 
 	/**
 	 * Flash success message.
 	 *
 	 * @param string $message
+	 * @param string $url Optional redirection URL.
 	 */
-	protected function _flash_success($message)
+	protected function _flash_success($message, $url = NULL)
 	{
-		Session::instance()->set(static::MESSAGE_SUCCESS, $message);
+		$this->_flash_message(static::MESSAGE_SUCCESS, $message, $url);
 	}
 
 	/**
 	 * Flash error message.
 	 *
 	 * @param string $message
+	 * @param string $url Optional redirection URL.
 	 */
-	protected function _flash_error($message)
+	protected function _flash_error($message, $url = NULL)
 	{
-		Session::instance()->set(static::MESSAGE_ERROR, $message);
+		$this->_flash_message(static::MESSAGE_ERROR, $message, $url);
 	}
 
 } // Trideo_Controller
