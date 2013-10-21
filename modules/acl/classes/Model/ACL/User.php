@@ -5,6 +5,10 @@
  * @category Model
  */
 class Model_ACL_User extends Model_SimpleAuth_User {
+
+	protected $_has_one = array(
+		'credit' => array(),
+	);
 	
 	protected $_has_many = array(
 		'roles' => array(

@@ -47,6 +47,7 @@ class Controller_Admin_Member extends Trideo_Controller_Admin {
 		$this->view->set(array(
 			'user' => $user,
 			'is_admin' => $user->is_admin(),
+			'balance' => $user->credit->balance,
 		));
 	}
 

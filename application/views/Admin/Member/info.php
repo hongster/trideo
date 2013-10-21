@@ -12,6 +12,7 @@
 		<h2>Member Info</h2>
 
 		<ul class="list-group">
+			<li class="list-group-item">Credits: <?php echo $balance; ?></li>
 			<li class="list-group-item">Name: <?php echo HTML::chars($user->name); ?></li>
 			<li class="list-group-item">Email: <?php echo HTML::mailto($user->email); ?></li>
 			<li class="list-group-item">Contact: <?php echo ($user->contact_num) ? $user->contact_num : '-'; ?></li>
