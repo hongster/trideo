@@ -6,6 +6,19 @@
  */
 class Model_User extends Model_ACL_User implements Paging_Pagable {
 	
+	protected $_has_one = array(
+		'credit' => array(),
+	);
+
+	protected $_has_many = array(
+		'roles' => array(
+			'model' => 'Role',
+			'through' => 'roles_users',
+		),
+
+		'transactions' => array(),
+	);
+
 	/**
 	 * @override
 	 * @return array
