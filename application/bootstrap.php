@@ -158,6 +158,13 @@ Route::set('logout', 'logout')
 /**
  * Adminstration pages
  */
+Route::set('confirm_purchase', 'admin/credit/confirm_purchase/<user_id>/<amount>')
+	->defaults(array(
+		'directory' => 'Admin',
+		'controller' => 'Credit',
+		'action' => 'confirm_purchase',
+	));
+
 Route::set('admin', 'admin(/<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'directory' => 'Admin',

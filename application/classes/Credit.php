@@ -23,8 +23,40 @@ class Credit {
 	 */
 	public static function purchase_credits(Model_User $user, $amount)
 	{
-		$add = 0; // Number of credits purchased
-		$original_amount = $amount;
+		$topup = static::cost2credits($amount);
+
+		if ($topup < 1) // WTF
+		{
+			return 0;
+		}
+
+		// Update balance
+		$credit = $user->credit;
+		$credit->balance += $topup;
+		$credit->save();
+
+		// Record transaction
+		$transaction = ORM::factory('Transaction');
+		$transaction->user_id = $user->id;
+		$transaction->description = strtr(
+			'Purchase :topup credits with RM :amount',
+			array(':topup' => 'topup', ':amount' => 'amount'));
+		$transaction->adjustment = $topup;
+		$transaction->balance = $credit->balance;
+		$transaction->save();
+
+		return $topup;
+	}
+
+	/**
+	 * Convert Riggit to credits.
+	 * 
+	 * @param int $amount in Ringgit.
+	 * @return int
+	 */
+	public static function cost2credits($amount)
+	{
+		$credits = 0;
 		$rates = static::$rates;
 		arsort($rates, SORT_NUMERIC);
 
@@ -33,32 +65,18 @@ class Credit {
 			while ($amount >= $price)
 			{
 				$amount -= $price;
-				$add += $c;
+				$credits += $c;
 			}
 		}
 
 		// Values smaller than RM 16.00
 		if ($amount > 0)
 		{
-			$add += (int) floor($amount / 16 * 8);
+			// XXX Hardcoded values here
+			$credits += (int) floor($amount / 16 * 8);
 		}
 
-		// Update balance
-		$credit = $user->credit;
-		$credit->balance += $add;
-		$credit->save();
-
-		// Record transaction
-		$transaction = ORM::factory('Transaction');
-		$transaction->user_id = $user->id;
-		$transaction->description = strtr(
-			'Purchase :add credits with RM:amount',
-			array(':add' => $add, ':amount' => $original_amount));
-		$transaction->adjustment = $add;
-		$transaction->balance = $credit->balance;
-		$transaction->save();
-
-		return $add;
+		return $credits;
 	}
 
 } // Credit

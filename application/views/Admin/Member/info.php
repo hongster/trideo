@@ -23,6 +23,12 @@
 		<h3>Operations</h3>
 
 		<ul class="nav nav-pills nav-stacked">
+			<li>
+				<?php echo HTML::anchor(
+					'admin/transaction/history'.URL::query(array('user_id' => $user->id)),
+					'Transaction History'); ?>
+			</li>
+			<li><?php echo HTML::anchor('admin/credit/purchase/'.$user->id, 'Purchase Credits'); ?></li>
 			<li><?php echo HTML::anchor('admin/member/update/'.$user->id, 'Update Info'); ?></li>
 
 			<?php if ($is_admin): ?>
@@ -31,7 +37,6 @@
 				<li><?php echo HTML::anchor('admin/member/promote_admin/'.$user->id, 'Promote Admin'); ?></li>
 			<?php endif; ?>
 
-			<li><?php echo HTML::anchor('admin/credit/purchase/'.$user->id, 'Purchase Credits'); ?></li>
 		</ul>
 	</div><!-- Action menu -->
 </div>
