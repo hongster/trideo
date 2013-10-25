@@ -28,6 +28,7 @@
 					'admin/transaction/history'.URL::query(array('user_id' => $user->id)),
 					'Transaction History'); ?>
 			</li>
+			<li><?php echo HTML::anchor('admin/access'.URL::query(array('user_id' => $user->id)), 'Access Log'); ?></li>
 			<li><?php echo HTML::anchor('admin/credit/purchase/'.$user->id, 'Purchase Credits'); ?></li>
 			<li><?php echo HTML::anchor('admin/member/update/'.$user->id, 'Update Info'); ?></li>
 
@@ -40,3 +41,19 @@
 		</ul>
 	</div><!-- Action menu -->
 </div>
+
+<h2>Last Access</h2>
+
+<p>
+	<?php if ($last_access == NULL): ?>
+		Member has not checkin HSJB before.
+		<?php echo HTML::anchor('admin/access/checkin/'.$user->id, 'Checkin Now', array('class' => 'btn btn-success')); ?>
+	<?php elseif ( ! $last_access->checkout): ?>
+		Member has checkin since <?php echo date('Y-m-d H:i', $last_access->checkin); ?>
+		<?php echo HTML::anchor('admin/access/checkout/'.$user->id, 'Checkin Out', array('class' => 'btn btn-warning')); ?>
+	<?php else: ?>
+		Member last checkin on <?php echo date('Y-m-d H:i', $last_access->checkin); ?> and checkout at
+		<?php echo date('Y-m-d H:i', $last_access->checkout); ?>.
+		<?php echo HTML::anchor('admin/access/checkin/'.$user->id, 'Checkin Now', array('class' => 'btn btn-success')); ?>
+	<?php endif;?>
+</p>

@@ -48,6 +48,7 @@ class Controller_Admin_Member extends Trideo_Controller_Admin {
 			'user' => $user,
 			'is_admin' => $user->is_admin(),
 			'balance' => $user->credit->balance,
+			'last_access' => Access::last_access($user),
 		));
 	}
 

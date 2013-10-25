@@ -40,7 +40,7 @@ class Credit {
 		$transaction->user_id = $user->id;
 		$transaction->description = strtr(
 			'Purchase :topup credits with RM :amount',
-			array(':topup' => 'topup', ':amount' => 'amount'));
+			array(':topup' => $topup, ':amount' => $amount));
 		$transaction->adjustment = $topup;
 		$transaction->balance = $credit->balance;
 		$transaction->save();

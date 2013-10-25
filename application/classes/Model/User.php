@@ -17,6 +17,7 @@ class Model_User extends Model_ACL_User implements Paging_Pagable {
 		),
 
 		'transactions' => array(),
+		'access' => array(),
 	);
 
 	/**
