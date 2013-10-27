@@ -46,14 +46,19 @@
 
 <p>
 	<?php if ($last_access == NULL): ?>
-		Member has not checkin HSJB before.
-		<?php echo HTML::anchor('admin/access/checkin/'.$user->id, 'Checkin Now', array('class' => 'btn btn-success')); ?>
+		<p class="alert alert-info">
+			Make this the first checkin!
+			<?php echo HTML::anchor('admin/access/checkin/'.$user->id, 'Checkin Now', array('class' => 'btn btn-success')); ?>
+		</p>
 	<?php elseif ( ! $last_access->checkout): ?>
-		Member has checkin since <?php echo date('Y-m-d H:i', $last_access->checkin); ?>
-		<?php echo HTML::anchor('admin/access/checkout/'.$user->id, 'Checkin Out', array('class' => 'btn btn-warning')); ?>
+		<p class="alert alert-warning">
+			<?php echo HTML::chars($user->name); ?> has checkin since <?php echo date('Y-m-d H:i', $last_access->checkin); ?>
+			<?php echo HTML::anchor('admin/access/checkout/'.$user->id, 'Checkin Out', array('class' => 'btn btn-warning')); ?>
+		</p>
 	<?php else: ?>
-		Member last checkin on <?php echo date('Y-m-d H:i', $last_access->checkin); ?> and checkout at
-		<?php echo date('Y-m-d H:i', $last_access->checkout); ?>.
-		<?php echo HTML::anchor('admin/access/checkin/'.$user->id, 'Checkin Now', array('class' => 'btn btn-success')); ?>
+		<p class="alert alert-info">
+			<?php echo HTML::chars($user->name); ?> last checkout at <?php echo date('Y-m-d H:i', $last_access->checkout); ?>
+			<?php echo HTML::anchor('admin/access/checkin/'.$user->id, 'Checkin Now', array('class' => 'btn btn-success')); ?>
+		</p>
 	<?php endif;?>
 </p>

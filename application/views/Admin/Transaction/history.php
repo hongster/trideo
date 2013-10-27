@@ -5,7 +5,9 @@
 		<tr>
 			<th>Date</th>
 			<th>Member</th>
-			<th>Increment (credits)</th>
+			<th>Price (MYR)</th>
+			<th>Credit</th>
+			<th>Balance</th>
 			<th>Description</th>
 		</tr>
 	</thead>
@@ -15,7 +17,15 @@
 			<tr>
 				<td><?php echo date('Y-m-d H:i:s', $transaction->created_at); ?></td>
 				<td><?php echo HTML::anchor('admin/member/info/'.$transaction->user->id, $transaction->user->name); ?></td>
-				<td><?php echo $transaction->adjustment;  ?></td>
+				
+				<?php if (is_null($transaction->price)): ?>
+					<td></td>
+				<?php else: ?>
+					<td><?php echo $transaction->price; ?></td>
+				<?php endif; ?>
+
+				<td><?php echo $transaction->credit;  ?></td>
+				<td><?php echo $transaction->balance;  ?></td>
 				<td><?php echo HTML::chars($transaction->description);  ?></td>
 			</tr>
 		<?php endforeach; ?>

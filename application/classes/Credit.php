@@ -38,10 +38,9 @@ class Credit {
 		// Record transaction
 		$transaction = ORM::factory('Transaction');
 		$transaction->user_id = $user->id;
-		$transaction->description = strtr(
-			'Purchase :topup credits with RM :amount',
-			array(':topup' => $topup, ':amount' => $amount));
-		$transaction->adjustment = $topup;
+		$transaction->description = 'Purchase credit.';
+		$transaction->price = $amount;
+		$transaction->credit = $topup;
 		$transaction->balance = $credit->balance;
 		$transaction->save();
 
