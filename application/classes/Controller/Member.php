@@ -1,5 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * @package Trideo
+ * @category Controller
+ */
 class Controller_Member extends Trideo_Controller_Member {
 
 	public function action_index()
