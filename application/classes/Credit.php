@@ -102,9 +102,10 @@ class Credit {
 			$access->user_id);
 
 		$credit = ORM::factory('Credit', array('user_id' => $access->user_id));
+		$duration = $access->checkout - $access->checkin;
 
 		// No charge if usage below 15 min
-		if ($accumulated < static::FREE_THRESHOLD)
+		if ($accumulated + $duration < static::FREE_THRESHOLD)
 		{
 			ORM::factory('Transaction')
 				->values(array(
@@ -138,17 +139,16 @@ class Credit {
 
 			return 0;
 		}
-
-		$duration = $access->checkout - $access->checkin;
 		
+		// Access is chargable
 		if ($accumulated + $duration <= static::MAX_HOURS)
 		{
-			$charge = (int) ceil($duration / 60);	
+			$charge = (int) ceil($duration / Date::HOUR);
 		}
 		else
 		{
 			// Cross the MAX_HOURS boundry, only charge within boundary
-			$charge = (int) ceil((static::MAX_HOURS - $accumulated) / 60);	
+			$charge = (int) ceil((static::MAX_HOURS - $accumulated) / Date::HOUR);
 		}
 
 		$credit->balance -= $charge;
