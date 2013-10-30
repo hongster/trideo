@@ -22,8 +22,7 @@ class Controller_Session extends Trideo_Controller {
 			$success = Auth::instance()->login($this->request->post('email'), $this->request->post('password'));
 			if ($success)
 			{
-				$uri = ACL::is_admin() ? 'admin' : '';
-				return $this->redirect($uri);
+				return $this->redirect('');
 			}
 			else
 			{
