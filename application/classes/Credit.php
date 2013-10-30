@@ -6,6 +6,12 @@
  */
 class Credit {
 
+	/** No charge if usage < 15min */
+	const FREE_THRESHOLD = 900; // 15 minutes
+
+	/** Capped at 8 hours per day, no charge for subsequent usage in this day */
+	const MAX_HOURS = 28800; // 8 hours
+
 	/** @var array Rates (RM => Credit) */
 	public static $rates = array(
 		16 => 8,
@@ -76,6 +82,91 @@ class Credit {
 		}
 
 		return $credits;
+	}
+
+	/**
+	 * Charge credits based on access duration.
+	 * 
+	 * @param Model_Access $access With checkout time recorded.
+	 * @return int Number of credits deducted.
+	 */
+	public static function charge_access(Model_Access $access)
+	{
+		// Today's 0000h. Might be yesteday's 0000h if access started yesterday 
+		// and cross midnight.
+		$today = strtotime(date('Y-m-d', $access->checkin));
+
+		$accumulated = ORM::factory('Access')->accumulated_duration(
+			$today,
+			$access->checkin,
+			$access->user_id);
+
+		$credit = ORM::factory('Credit', array('user_id' => $access->user_id));
+
+		// No charge if usage below 15 min
+		if ($accumulated < static::FREE_THRESHOLD)
+		{
+			ORM::factory('Transaction')
+				->values(array(
+					'user_id' => $access->user_id,
+					'price' => 0.00,
+					'credit' => 0,
+					'balance' => $credit->balance,
+					'description' => strtr(
+						'Less than 15 min. Not charging access from :start to :end',
+						array(':start' => date('Y-m-d H:i:s', $access->checkin), ':end' => date('Y-m-d H:i:s', $access->checkout))),
+				))
+				->save();
+
+			return 0;
+		}
+
+		// Capped at 8 hours per day
+		if ($accumulated > static::MAX_HOURS)
+		{
+			ORM::factory('Transaction')
+				->values(array(
+					'user_id' => $access->user_id,
+					'price' => 0.00,
+					'credit' => 0,
+					'balance' => $credit->balance,
+					'description' => strtr(
+						'Exceeded 8 hours in a day. Not charging access from :start to :end',
+						array(':start' => date('Y-m-d H:i:s', $access->checkin), ':end' => date('Y-m-d H:i:s', $access->checkout))),
+				))
+				->save();
+
+			return 0;
+		}
+
+		$duration = $access->checkout - $access->checkin;
+		
+		if ($accumulated + $duration <= static::MAX_HOURS)
+		{
+			$charge = (int) ceil($duration / 60);	
+		}
+		else
+		{
+			// Cross the MAX_HOURS boundry, only charge within boundary
+			$charge = (int) ceil((static::MAX_HOURS - $accumulated) / 60);	
+		}
+
+		$credit->balance -= $charge;
+		$credit->save();
+
+		ORM::factory('Transaction')
+			->values(array(
+				'user_id' => $access->user_id,
+				'price' => 0.00,
+				'credit' => -$charge,
+				'balance' => $credit->balance,
+				'description' => strtr(
+					'Charged :charge credits for access from :start to :end',
+					array(':charge' => $charge, ':start' => date('Y-m-d H:i:s', $access->checkin), ':end' => date('Y-m-d H:i:s', $access->checkout))),
+			))
+			->save();
+
+		return $charge;
 	}
 
 } // Credit

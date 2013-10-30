@@ -52,25 +52,17 @@ class Controller_Admin_Access extends Trideo_Controller_Admin {
 	{
 		$user_id = $this->request->param('id');
 
-		// Check if user already logged in
-		$access = ORM::factory('Access')
-			->where('user_id', '=', $user_id)
-			->where('checkout', '=', NULL)
-			->find();
+		$charge = Access::checkout_user($user_id);
 
-		if ( ! $access->loaded())
+		if ($charge === NULL)
 		{
 			return $this->_flash_error(
 				'Member has not checkin yet.',
 				'admin/member/info/'.$user_id);
 		}
 
-		$access->values(array('user_id' => $user_id, 'checkout' => time()))
-			->save();
-		// TODO calculate cost
-
 		return $this->_flash_success(
-				'Member has checkout.',
+				"{$charge} credits deducted.",
 				'admin/member/info/'.$user_id);
 	}
 

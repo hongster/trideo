@@ -72,4 +72,29 @@ class Model_Access extends ORM implements Paging_Pagable {
 		}
 	}
 
+	/**
+	 * Calculate accumulated access time.
+	 *
+	 * @param int $start Inclusive.
+	 * @param int $end Exclusive.
+	 * @param int $user_id
+	 * @return int In seconds.
+	 */
+	public function accumulated_duration($start, $end, $user_id)
+	{
+		$models = ORM::factory('Access')
+			->where('checkin', '>=', $start)
+			->where('checkout', '<', $end)
+			->where('user_id', '=', $user_id)
+			->find_all();
+
+		$duration = 0;
+		foreach ($models as $access)
+		{
+			$duration += ($access->checkout - $access->checkin);
+		}
+
+		return $duration;
+	}
+
 } // Model_Access
